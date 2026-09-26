@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mtaani Cloud md - Deploy Anything</title>
+<title>Mtaani Cloud - Deploy Anything</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -33,7 +33,7 @@ body{background:#0a0a0a;color:#fff;padding-bottom:90px}
 .btn-outline{background:transparent;border:1px solid #222;color:#fff}
 .status{margin-top:10px;padding:10px;border-radius:10px;text-align:center;font-weight:700;display:none}
 .ok{background:#dcfce7;color:#166534}.wait{background:#fef9c3;color:#854d0e}.err{background:#fee2e2;color:#991b1b}
-.label{font-size:11px;color:#888;margin:5px 0 0 2px;display:block;text-transform:uppercase;letter-spacing:0.5px}
+.label{font-size:11px;color:#888;margin:12px 0 0 2px;display:block;text-transform:uppercase;letter-spacing:0.5px}
 .pair-box{background:#0a0a0a;border:1px dashed #ffcc00;padding:15px;border-radius:12px;margin:10px 0;text-align:center;display:none}
 .pair-code{font-size:32px;font-weight:bold;letter-spacing:3px;color:#ffcc00;margin:10px 0}
 </style>
@@ -56,30 +56,58 @@ body{background:#0a0a0a;color:#fff;padding-bottom:90px}
 <div class="card" onclick="toast('Websites Hosting 999/year')"><i class="fa-solid fa-globe cyan"></i><b>Websites</b><span>Hosting</span></div>
 <div class="card" onclick="toast('Numbers USA/UK 1500')"><i class="fa-solid fa-sim-card red"></i><b>Numbers</b><span>USA/UK</span></div>
 </div>
-<div class="section"><b>EXPLORE</b></div>
-<div style="padding:15px">
-<div class="row" onclick="openMyBots()"><span><i class="fa-solid fa-chart-line gold"></i> Live Activity</span><i class="fa-solid fa-chevron-right" style="color:#333"></i></div>
-<div class="row" onclick="toast('Check WhatsApp Status')"><span><i class="fa-solid fa-gift blue"></i> Daily Offers • 3 New</span><span style="background:#ffcc00;color:#000;padding:2px 8px;border-radius:10px;font-size:10px">NEW</span></div>
-<div class="row" onclick="window.open('https://wa.me/254700000000','_blank')"><span><i class="fa-solid fa-headset green"></i> Support 24/7</span><i class="fa-solid fa-chevron-right" style="color:#333"></i></div>
+
+<div class="modal" id="deployModal" onclick="if(event.target==this)closeAll()">
+<div class="modal-box">
+<h3>🚀 Deploy WhatsApp Bot</h3>
+
+<span class="label">1. Bot Name</span>
+<input class="input" id="botName" placeholder="e.g. Mtaani Bot">
+
+<span class="label">2. Bot Number ( Lazima 254... )</span>
+<input class="input" id="botNumber" placeholder="254703182307 - Usianze na 0, anza na 254" type="tel">
+<small style="color:gray;margin-left:2px">Mfano sahihi: 254712345678</small>
+
+<button class="btn" id="pairBtn" onclick="getPairCode()" style="background:#22c55e;color:#fff"><i class="fa-solid fa-link"></i> GET PAIR CODE</button>
+
+<div id="pairBox" class="pair-box">
+<small style="color:#888">YOUR PAIR CODE:</small>
+<div id="pairCodeDisplay" class="pair-code">---- ----</div>
+<small style="color:#22c55e">WhatsApp > Linked Devices > Link with Phone Number > Enter code</small>
+<button class="btn btn-outline" onclick="copyPairCode()" style="margin-top:10px">📋 Copy Code</button>
 </div>
-<div class="nav">
-<i class="fa-solid fa-house active" onclick="closeAll()"></i>
-<i class="fa-solid fa-compass" onclick="toast('Explore soon')"></i>
-<div class="fab" onclick="openDeploy()"><i class="fa-solid fa-plus" style="color:#000"></i></div>
-<i class="fa-solid fa-trophy" onclick="openMyBots()"></i>
-<i class="fa-solid fa-user" onclick="openFund()"></i>
+<div id="pairStatus" class="status"></div>
+
+<span class="label">3. Pair Code / Session ID / Recovery Key</span>
+<input class="input" id="sessionId" placeholder="MTAANI~aBcD...  AU  R8TM-A5BL  AU  mtaani_rec_... - Achia wazi kama unatumia PAIR CODE">
+<small style="color:#22c55e;display:block;margin:5px 2px">
+💡 MPYA: Achia wazi > GET PAIR CODE juu > Deploy<br>
+♻️ ZAMANI: Kama bot ilitoka, bonyeza RECOVER hapo chini
+</small>
+
+<button class="btn btn-outline" onclick="recoverBot()" style="border-color:#22c55e;color:#22c55e">
+<i class="fa-solid fa-rotate"></i> ♻️ RECOVER MY BOT
+</button>
+
+<div style="background:#0a0a0a;border:1px solid #222;padding:12px;border-radius:12px;margin:15px 0">
+<small style="color:#ffcc00">📖 JINSI YA KUTUMIA:</small><br>
+<small style="color:#888">1. Weka Number 254...<br>2. Bonyeza GET PAIR CODE<br>3. Code itajaza hapa auto<br>4. WhatsApp > Linked Devices > Link with phone number > Weka code<br>5. Kisha DEPLOY NOW</small>
 </div>
+
+<p style="color:#888;font-size:12px">Cost: KSh 50 per deploy.</p>
+<button class="btn" onclick="deployBot()">🚀 Deploy Now</button>
+<button class="btn btn-outline" onclick="closeAll()">Cancel</button>
+</div>
+</div>
+
 <div class="modal" id="fundModal" onclick="if(event.target==this)closeAll()">
 <div class="modal-box">
 <h3>Fund Wallet - TILL 3624692</h3>
-<p style="color:#888;font-size:13px;margin:10px 0">Firebase LIVE - Admin sees instantly</p>
+<p style="color:#888;font-size:13px;margin:10px 0">Firebase LIVE</p>
 <input id="fundPhone" class="input" placeholder="Your Phone 07...">
 <input id="fundAmount" class="input" type="number" placeholder="Enter Amount (min 100)">
 <div style="background:#0a0a0a;border:1px dashed #ffcc00;padding:15px;border-radius:12px;margin:10px 0">
-<small style="color:#ffcc00">PAY VIA:</small><br>
-<b>1. M-Pesa -> Buy Goods Till: 3624692</b><br>
-<b>2. Amount: <span id="showAmt">0</span></b><br>
-<small style="color:#888">After payment enter CODE below</small>
+<small style="color:#ffcc00">PAY VIA:</small><br><b>1. M-Pesa -> Buy Goods Till: 3624692</b><br><b>2. Amount: <span id="showAmt">0</span></b>
 </div>
 <input id="mpesaCode" class="input" placeholder="Enter M-Pesa Code (e.g. QGH7XY...)">
 <button class="btn" id="submitBtn" onclick="submitFund()">✅ I Have Paid - Confirm LIVE</button>
@@ -88,35 +116,15 @@ body{background:#0a0a0a;color:#fff;padding-bottom:90px}
 <div style="margin-top:15px" id="myRequests"></div>
 </div>
 </div>
-<div class="modal" id="deployModal" onclick="if(event.target==this)closeAll()">
-<div class="modal-box">
-<h3>🚀 Deploy WhatsApp Bot</h3>
-<p style="color:#666;font-size:12px;margin:8px 0 15px">Fill all fields correctly</p>
-<span class="label">1. Bot Name</span>
-<input class="input" id="botName" placeholder="e.g. Mtaani Bot">
-<span class="label">2. Bot Number (Must be 254...)</span>
-<input class="input" id="botNumber" placeholder="2547xxxxxxxx e.g 254712345678" type="tel">
 
-<button class="btn" id="pairBtn" onclick="getPairCode()" style="background:#22c55e;color:#fff"><i class="fa-solid fa-link"></i> GET PAIR CODE</button>
-<div id="pairBox" class="pair-box">
-<small style="color:#888">YOUR PAIR CODE:</small>
-<div id="pairCodeDisplay" class="pair-code">---- ----</div>
-<small style="color:#22c55e" id="pairMsg">Go to WhatsApp > Linked Devices > Link with Phone Number</small>
-<button class="btn btn-outline" onclick="copyPairCode()" style="margin-top:10px">📋 Copy Code</button>
+<div class="nav">
+<i class="fa-solid fa-house active" onclick="closeAll()"></i>
+<i class="fa-solid fa-compass"></i>
+<div class="fab" onclick="openDeploy()"><i class="fa-solid fa-plus" style="color:#000"></i></div>
+<i class="fa-solid fa-trophy" onclick="openMyBots()"></i>
+<i class="fa-solid fa-user" onclick="openFund()"></i>
 </div>
-<div id="pairStatus" class="status"></div>
 
-<span class="label">3. Pair Code or Session ID</span>
-<input class="input" id="sessionId" placeholder="Enter Pair Code (ABCD-1234)">
-<div style="background:#0a0a0a;border:1px solid #222;padding:12px;border-radius:12px;margin:10px 0">
-<small style="color:#ffcc00">💡 HOW IT WORKS:</small><br>
-<small style="color:#888">1. Enter Number 254...<br>2. Click GET PAIR CODE<br>3. Code appears above<br>4. WhatsApp > Linked Devices > Link with phone number > Enter code</small>
-</div>
-<p style="color:#888;font-size:12px">Cost: KSh 50 per deploy.</p>
-<button class="btn" onclick="deployBot()">🚀 Deploy Now</button>
-<button class="btn btn-outline" onclick="closeAll()">Cancel</button>
-</div>
-</div>
 <script>
 const firebaseConfig = {
   apiKey: "AIzaSyBhgl5VUMu0dglRC-mNBX6OiGsrCcp2EDc",
@@ -137,140 +145,58 @@ document.getElementById('uidLabel').innerText = 'ID: '+userId + (savedPhone? ' �
 if(savedPhone) document.getElementById('fundPhone').value = savedPhone;
 let balance = parseInt(localStorage.getItem('mtaani_balance')||'0');
 document.getElementById('bal').innerText='KSh '+balance+'.00';
-function listenBalance(){
- const phoneKey = (document.getElementById('fundPhone').value.trim() || savedPhone || userId);
- if(!phoneKey) return;
- db.ref('balances/'+phoneKey).on('value', snap=>{
-  const v = snap.val(); 
-  if(v && typeof v.balance !== 'undefined'){ 
-   balance = v.balance; 
-   document.getElementById('bal').innerText='KSh '+balance+'.00'; 
-   localStorage.setItem('mtaani_balance', balance); 
-   document.getElementById('uidLabel').innerText = 'ID: '+userId + ' • '+phoneKey;
-  }
- });
-}
-listenBalance();
-function updateBal(){ 
- document.getElementById('bal').innerText='KSh '+balance+'.00'; 
- let bots = JSON.parse(localStorage.getItem('my_bots')||'[]');
- document.getElementById('botCount').innerText= bots.length+' Active'; 
-}
+function updateBal(){ document.getElementById('bal').innerText='KSh '+balance+'.00'; let bots = JSON.parse(localStorage.getItem('my_bots')||'[]'); document.getElementById('botCount').innerText= bots.length+' Active'; }
 updateBal();
-function openFund(){ document.getElementById('fundModal').classList.add('active'); listenMyRequests(); listenBalance(); }
+function openFund(){ document.getElementById('fundModal').classList.add('active'); }
 function openDeploy(){ document.getElementById('deployModal').classList.add('active'); }
-function openMyBots(){ 
-  let bots = JSON.parse(localStorage.getItem('my_bots')||'[]'); 
-  if(!bots.length) return toast('No bots yet. Deploy first!'); 
-  let txt = bots.map(b=>`🤖 ${b.name}\n📱 ${b.number||'No number'}\n🔑 ${ (b.session||'').substring(0,20)}...\n✅ ${b.status}`).join('\n\n');
-  alert('MY BOTS:\n\n'+txt); 
-}
+function openMyBots(){ let bots = JSON.parse(localStorage.getItem('my_bots')||'[]'); if(!bots.length) return alert('No bots yet.'); alert('MY BOTS:\n\n'+bots.map(b=>`🤖 ${b.name}\n📱 ${b.number}\n✅ ${b.status}`).join('\n\n')); }
 function closeAll(){ document.querySelectorAll('.modal').forEach(m=>m.classList.remove('active')); }
 function toast(m){ alert(m); }
 document.getElementById('fundAmount')?.addEventListener('input', e=>{ document.getElementById('showAmt').innerText = e.target.value || '0'; });
-document.getElementById('fundPhone')?.addEventListener('input', e=>{ 
- if(e.target.value.length>=9){ 
-  savedPhone = e.target.value.trim(); 
-  localStorage.setItem('mtaani_phone', savedPhone); 
-  listenBalance(); 
-  listenMyRequests(); 
- } 
-});
-function listenMyRequests(){
- const phone = document.getElementById('fundPhone').value.trim() || savedPhone || userId;
- if(!phone) return;
- db.ref('requests').orderByChild('phone').equalTo(phone).on('value', snap=>{
-  const data = snap.val()||{}; 
-  const arr = Object.values(data).slice(-3).reverse();
-  document.getElementById('myRequests').innerHTML = arr.length?'<b>Your Requests (LIVE):</b><br>'+arr.map(r=>`KSh ${r.amount} - ${r.code} - <b style="color:${(r.status||'').toLowerCase().includes('pend')?'orange':(r.status||'').toLowerCase().includes('approv')?'#22c55e':'red'}">${r.status}</b>`).join('<br>'):'<small style="color:#666">No requests yet</small>';
- });
-}
-function submitFund(){
- let amt = document.getElementById('fundAmount').value;
- let code = document.getElementById('mpesaCode').value.toUpperCase().trim();
- let phone = document.getElementById('fundPhone').value.trim();
- if(!phone || phone.length<9) return alert('Enter your phone number!');
- if(!amt || amt<100) return alert('Amount min 100');
- if(!code || code.length<8) return alert('Enter valid Code!');
- localStorage.setItem('mtaani_phone', phone);
- savedPhone = phone;
- document.getElementById('submitBtn').disabled=true;
- const st = document.getElementById('fundStatus'); st.style.display='block'; st.className='status wait'; st.innerText='Sending LIVE to admin...';
- db.ref('requests').push({ amount: Number(amt), code: code, phone: phone, userId: userId, status: 'PENDING', createdAt: Date.now(), time: new Date().toLocaleString() }).then(()=>{
-  st.className='status ok'; st.innerText='✅ Sent LIVE! Admin will see it now.';
-  document.getElementById('fundAmount').value=''; document.getElementById('mpesaCode').value=''; listenMyRequests();
- }).catch(e=>{ st.className='status wait'; st.innerText='Error: '+e.message; }).finally(()=>{ document.getElementById('submitBtn').disabled=false; });
-}
+
 const ENGINEER_BOARD = 'https://mtaani-engineer-board.onrender.com';
 let lastPairCode = '';
 async function getPairCode(){
  let number = document.getElementById('botNumber').value.trim();
- if(!number) return alert('Enter Bot Number first! 254...');
- if(!number.startsWith('254') || number.length < 12) return alert('Number must be 254... 12 digits. You entered: '+number);
+ if(!number) return alert('Enter Bot Number 254...');
+ if(!number.startsWith('254') || number.length < 12) return alert('Number lazima ianze na 254 na digits 12. Uliandika: '+number);
  const btn = document.getElementById('pairBtn');
  const st = document.getElementById('pairStatus');
  const box = document.getElementById('pairBox');
- btn.disabled = true;
- btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating Code...';
- st.style.display = 'block';
- st.className = 'status wait';
- st.innerText = '⏳ Connecting to MTAANI ENGINEER BOARD...';
- box.style.display = 'none';
+ btn.disabled = true; btn.innerHTML = '⏳ Generating...'; st.style.display = 'block'; st.className = 'status wait'; st.innerText = 'Connecting to ENGINEER BOARD...'; box.style.display = 'none';
  try {
-   const res = await fetch(ENGINEER_BOARD + '/pair', {
-     method: 'POST',
-     headers: { 'Content-Type': 'application/json' },
-     body: JSON.stringify({ number: number })
-   });
-   const data = await res.json();
-   if(!res.ok) throw new Error(data.error || 'Failed');
-   lastPairCode = data.code || data.pairCode || '';
-   if(!lastPairCode) throw new Error('Code not found');
-   document.getElementById('pairCodeDisplay').innerText = lastPairCode;
-   box.style.display = 'block';
-   st.className = 'status ok';
-   st.innerText = '✅ Code Generated! Enter in WhatsApp now!';
-   document.getElementById('sessionId').value = lastPairCode;
- } catch(e){
-   st.className = 'status err';
-   st.style.display = 'block';
-   st.innerText = '❌ Error: '+ e.message + ' - Try again.';
- } finally {
-   btn.disabled = false;
-   btn.innerHTML = '<i class="fa-solid fa-link"></i> GET PAIR CODE';
- }
+   const res = await fetch(ENGINEER_BOARD + '/pair', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ number }) });
+   const data = await res.json(); if(!res.ok) throw new Error(data.error||'Failed');
+   lastPairCode = data.code || data.pairCode || ''; document.getElementById('pairCodeDisplay').innerText = lastPairCode; box.style.display = 'block'; st.className = 'status ok'; st.innerText = '✅ Code Generated! Weka WhatsApp sasa!'; document.getElementById('sessionId').value = lastPairCode;
+ } catch(e){ st.className = 'status err'; st.innerText = '❌ Error: '+ e.message; } finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-link"></i> GET PAIR CODE'; }
 }
-function copyPairCode(){
- if(!lastPairCode) return alert('No code!');
- navigator.clipboard.writeText(lastPairCode).then(()=>toast('✅ Copied: '+lastPairCode));
+function copyPairCode(){ if(!lastPairCode) return alert('No code!'); navigator.clipboard.writeText(lastPairCode).then(()=>toast('Copied: '+lastPairCode)); }
+
+async function recoverBot(){
+  let number = document.getElementById('botNumber').value.trim();
+  if(!number || !number.startsWith('254')) return alert('Weka number 254... kwanza!');
+  const st = document.getElementById('pairStatus');
+  st.style.display='block'; st.className='status wait'; st.innerText='♻️ Checking backup ya '+number+'...';
+  try{
+    const res = await fetch(ENGINEER_BOARD + '/recover/' + number);
+    const data = await res.json();
+    if(data.creds){ document.getElementById('sessionId').value = data.creds; st.className='status ok'; st.innerText='✅ Recovery Found! Bonyeza DEPLOY NOW'; toast('Recovery loaded!'); }
+    else throw new Error(data.error||'No backup');
+  } catch(e){ st.className='status err'; st.innerText='❌ Hakuna backup - Tumia GET PAIR CODE'; }
+}
+
+function submitFund(){
+ let amt = document.getElementById('fundAmount').value; let code = document.getElementById('mpesaCode').value.toUpperCase().trim(); let phone = document.getElementById('fundPhone').value.trim();
+ if(!phone || phone.length<9) return alert('Enter phone!'); if(!amt || amt<100) return alert('Min 100'); if(!code || code.length<8) return alert('Enter Code!');
+ localStorage.setItem('mtaani_phone', phone); document.getElementById('submitBtn').disabled=true;
+ const st = document.getElementById('fundStatus'); st.style.display='block'; st.className='status wait'; st.innerText='Sending...';
+ db.ref('requests').push({ amount: Number(amt), code, phone, userId, status: 'PENDING', createdAt: Date.now() }).then(()=>{ st.className='status ok'; st.innerText='✅ Sent!'; }).catch(e=>{ st.className='status err'; st.innerText=e.message; }).finally(()=>{ document.getElementById('submitBtn').disabled=false; });
 }
 function deployBot(){
- let name = document.getElementById('botName').value.trim();
- let number = document.getElementById('botNumber').value.trim();
- let sess = document.getElementById('sessionId').value.trim();
- if(!name) return alert('Enter Bot Name!');
- if(!number) return alert('Enter Bot Number 254...!');
- if(!number.startsWith('254') || number.length < 12) return alert('Number must start with 254 and be 12 digits! e.g 254712345678\nYou entered: '+number);
- if(!sess) return alert('Enter Pair Code! Click GET PAIR CODE first!');
- if(balance < 50) return alert('Insufficient balance! Fund first. Need 50, you have '+balance);
- const phone = savedPhone || document.getElementById('fundPhone').value.trim() || userId;
- db.ref('balances/'+phone).once('value').then(s=>{
-  const cur = s.val()?.balance||0; 
-  if(cur < 50 && balance < 50) throw new Error('Insufficient balance: '+cur);
-  return db.ref('balances/'+phone).set({balance: cur>=50 ? cur-50 : balance-50, updatedAt: Date.now(), phone: phone});
- }).then(()=>{
-  let bots = JSON.parse(localStorage.getItem('my_bots')||'[]'); 
-  bots.push({name:name, number:number, session:sess, status:'ACTIVE - Running', time:Date.now()}); 
-  localStorage.setItem('my_bots', JSON.stringify(bots)); 
-  db.ref('deployed_bots').push({name, number, session: sess.substring(0,30)+'...', owner: phone, userId, createdAt: Date.now()});
-  balance = balance - 50;
-  localStorage.setItem('mtaani_balance', balance);
-  updateBal(); 
-  alert('🚀 Bot "'+name+'"\nNumber: '+number+'\nDeployed!\nCode: '+sess+'\nWill start in 2 min.'); 
-  closeAll();
-  document.getElementById('botName').value=''; document.getElementById('botNumber').value=''; document.getElementById('sessionId').value='';
-  document.getElementById('pairBox').style.display='none';
- }).catch(e=>alert(e.message));
+ let name = document.getElementById('botName').value.trim(); let number = document.getElementById('botNumber').value.trim(); let sess = document.getElementById('sessionId').value.trim();
+ if(!name) return alert('Enter Bot Name!'); if(!number.startsWith('254') || number.length<12) return alert('Number must be 254... 12 digits'); if(!sess) return alert('Weka Pair Code au Recovery Key! Bonyeza GET PAIR CODE kwanza');
+ if(balance < 50) return alert('Balance insufficient! Fund 50');
+ let bots = JSON.parse(localStorage.getItem('my_bots')||'[]'); bots.push({name, number, session:sess, status:'ACTIVE', time:Date.now()}); localStorage.setItem('my_bots', JSON.stringify(bots)); balance-=50; localStorage.setItem('mtaani_balance', balance); updateBal(); alert('🚀 Bot Deployed: '+name); closeAll();
 }
 </script>
 </body>
