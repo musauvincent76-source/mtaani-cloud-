@@ -57,7 +57,14 @@ function login(){
   document.getElementById('loginPage').style.display='none';
   document.getElementById('main').style.display='block';
   initFirebase();
+  localStorage.setItem('mtaani_admin','yes');
  } else alert('PIN Sio Sahihi!');
+}
+// Auto-login if already logged
+if(localStorage.getItem('mtaani_admin')=='yes'){
+  document.getElementById('loginPage').style.display='none';
+  document.getElementById('main').style.display='block';
+  setTimeout(initFirebase,500);
 }
 setInterval(()=>{ const el=document.getElementById('time'); if(el) el.innerText = new Date().toLocaleString(); },1000);
 const firebaseConfig = {
@@ -96,7 +103,7 @@ function render(){
   const phoneStr = r.phone? `<small style="color:#ffcc00">${r.phone}</small><br>` : '';
   html+=`<div class="card ${cls}">
   <div style="display:flex;justify-content:space-between">
-  <div><b>KSh ${r.amount}</b><br>${phoneStr}</div><small style="color:#888">${timeStr}</small>
+  <div><b>KSh ${r.amount}</b><br>${phoneStr}<small style="color:#aaa">ID: ${r.userId||''}</small></div><small style="color:#888">${timeStr}</small>
   </div>
   <div style="margin:8px 0;background:#0a0a0a;padding:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center">
   <b style="letter-spacing:1px">${r.code}</b><button class="btn btn-copy" onclick="navigator.clipboard.writeText('${r.code}')">Copy</button>
@@ -114,14 +121,14 @@ function approve(id){
  if(!r) return;
  if(!confirm('Approve KSh '+r.amount+' kwa '+r.phone+'?')) return;
  db.ref('requests/'+id).update({status:'APPROVED', approvedAt: Date.now()});
- const phone = r.phone || 'general_user';
+ const phone = r.phone;
  db.ref('balances/'+phone).once('value').then(snap=>{
    const cur = snap.val()?.balance || 0;
-   return db.ref('balances/'+phone).set({balance: cur + parseInt(r.amount), updatedAt: Date.now(), phone: phone});
- }).then(()=>{ alert('✅ APPROVED!'); });
+   return db.ref('balances/'+phone).set({balance: cur + parseInt(r.amount), updatedAt: Date.now(), phone: phone, lastCode: r.code});
+ }).then(()=>{ alert('✅ APPROVED! KSh '+r.amount+' added kwa '+r.phone); });
 }
 function reject(id){ if(confirm('Reject?')) db.ref('requests/'+id).update({status:'REJECTED'}); }
-function clearAll(){ if(confirm('Futa zote Firebase?')){ db.ref('requests').remove(); } }
+function clearAll(){ if(confirm('Futa zote Firebase? Hakikisha ume-approve zote muhimu!')){ if(confirm('Uko sure kabisa?')) db.ref('requests').remove(); } }
 </script>
 </body>
 </html>
