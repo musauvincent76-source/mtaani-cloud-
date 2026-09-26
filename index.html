@@ -56,21 +56,16 @@ body{background:#0a0a0a;color:#fff;padding-bottom:90px}
 <div class="card" onclick="toast('Websites Hosting 999/year')"><i class="fa-solid fa-globe cyan"></i><b>Websites</b><span>Hosting</span></div>
 <div class="card" onclick="toast('Numbers USA/UK 1500')"><i class="fa-solid fa-sim-card red"></i><b>Numbers</b><span>USA/UK</span></div>
 </div>
-
 <div class="modal" id="deployModal" onclick="if(event.target==this)closeAll()">
 <div class="modal-box">
 <h3>🚀 Deploy WhatsApp Bot</h3>
 <p style="color:#666;font-size:12px;margin:8px 0">Fill all fields correctly</p>
-
 <span class="label">1. Bot Name</span>
 <input class="input" id="botName" placeholder="e.g. Mtaani Bot">
-
 <span class="label">2. Bot Number (Must start with 254)</span>
 <input class="input" id="botNumber" placeholder="254703182307" type="tel">
 <small style="color:gray;margin-left:2px">Example: 254712345678 - Do not start with 0</small>
-
 <button class="btn" id="pairBtn" onclick="getPairCode()" style="background:#22c55e;color:#fff"><i class="fa-solid fa-link"></i> GET PAIR CODE</button>
-
 <div id="pairBox" class="pair-box">
 <small style="color:#888">YOUR PAIR CODE:</small>
 <div id="pairCodeDisplay" class="pair-code">---- ----</div>
@@ -78,29 +73,24 @@ body{background:#0a0a0a;color:#fff;padding-bottom:90px}
 <button class="btn btn-outline" onclick="copyPairCode()" style="margin-top:10px">📋 Copy Code</button>
 </div>
 <div id="pairStatus" class="status"></div>
-
 <span class="label">3. Pair Code / Session ID / Recovery Key</span>
 <input class="input" id="sessionId" placeholder="e.g. MTAANI~aBcD... or R8TM-A5BL or mtaani_rec_... - Leave empty if using Pair Code above">
 <small style="color:#22c55e;display:block;margin:5px 2px">
 💡 New Deployment: Leave empty > Click GET PAIR CODE above > Deploy<br>
 ♻️ Recovery: If bot logged out, click RECOVER below
 </small>
-
 <button class="btn btn-outline" onclick="recoverBot()" style="border-color:#22c55e;color:#22c55e">
 <i class="fa-solid fa-rotate"></i> ♻️ RECOVER MY BOT
 </button>
-
 <div style="background:#0a0a0a;border:1px solid #222;padding:12px;border-radius:12px;margin:15px 0">
 <small style="color:#ffcc00">📖 HOW IT WORKS:</small><br>
 <small style="color:#888">1. Enter number starting with 254<br>2. Click GET PAIR CODE<br>3. Code will auto-fill above<br>4. WhatsApp > Linked Devices > Link with phone number > Enter code<br>5. Click DEPLOY NOW</small>
 </div>
-
 <p style="color:#888;font-size:12px">Cost: KSh 50 per deployment.</p>
 <button class="btn" onclick="deployBot()">🚀 Deploy Now</button>
 <button class="btn btn-outline" onclick="closeAll()">Cancel</button>
 </div>
 </div>
-
 <div class="modal" id="fundModal" onclick="if(event.target==this)closeAll()">
 <div class="modal-box">
 <h3>Fund Wallet - TILL 3624692</h3>
@@ -115,7 +105,6 @@ body{background:#0a0a0a;color:#fff;padding-bottom:90px}
 <button class="btn btn-outline" onclick="closeAll()">Cancel</button>
 </div>
 </div>
-
 <div class="nav">
 <i class="fa-solid fa-house active" onclick="closeAll()"></i>
 <i class="fa-solid fa-compass"></i>
@@ -123,7 +112,6 @@ body{background:#0a0a0a;color:#fff;padding-bottom:90px}
 <i class="fa-solid fa-trophy" onclick="openMyBots()"></i>
 <i class="fa-solid fa-user" onclick="openFund()"></i>
 </div>
-
 <script>
 const firebaseConfig = {
   apiKey: "AIzaSyBhgl5VUMu0dglRC-mNBX6OiGsrCcp2EDc",
