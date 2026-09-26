@@ -1,1 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mtaani Admin - TILL 3624692</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,Arial}
+body{background:#0a0a0a;color:#fff;padding:15px}
+.header{background:#151515;border:1px solid #222;padding:15px;border-radius:15px;display:flex;justify-content:space-between;margin-bottom:15px}
+.stat{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:15px}
+.stat-box{background:#151515;border:1px solid #222;padding:15px;border-radius:15px;text-align:center}
+.stat-box b{font-size:22px;display:block;color:#ffcc00}
+.card{background:#151515;border:1px solid #222;border-radius:15px;padding:15px;margin-bottom:10px}
+.pending{border-left:4px solid orange}
+.approved{border-left:4px solid #22c55e}
+.rejected{border-left:4px solid #ef4444}
+.btn{padding:8px 14px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin-right:5px}
+.btn-approve{background:#22c55e;color:#000}
+.btn-reject{background:#ef4444;color:#fff}
+.btn-copy{background:#222;color:#fff}
+.input{width:100%;background:#0a0a0a;border:1px solid #222;padding:12px;border-radius:10px;color:#fff;margin-bottom:10px}
+.login{position:fixed;top:0;left:0;right:0;bottom:0;background:#0a0a0a;display:flex;align-items:center;justify-content:center;z-index:100}
+.login-box{background:#151515;border:1px solid #222;padding:30px;border-radius:20px;width:90%;max-width:350px;text-align:center}
+</style>
+</head>
+<body>
 
+<div id="loginPage" class="login">
+<div class="login-box">
+<h2><i class="fa-solid fa-lock" style="color:#ffcc00"></i> ADMIN LOGIN</h2>
+<p style="color:#888;margin:10px 0">TILL 3624692</p>
+<input id="pin" class="input" type="password" placeholder="Weka PIN (default 3624)">
+<button class="btn btn-approve" style="width:100%;padding:12px" onclick="login()">INGIA</button>
+<small style="color:#555;display:block;margin-top:10px">Badilisha PIN baadae kwa code</small>
+</div>
+</div>
+
+<div id="main" style="display:none">
+<div class="header">
+<div><h3>🔥 Mtaani Admin</h3><small style="color:#888">TILL 3624692 - Smart Verify</small></div>
+<div style="text-align:right"><small id="time"></small><br><b style="color:#22c55e">ONLINE</b></div>
+</div>
+
+<div class="stat">
+<div class="stat-box"><b id="sPending">0</b><small>PENDING</small></div>
+<div class="stat-box"><b id="sApproved">0</b><small>APPROVED</small></div>
+<div class="stat-box"><b id="sTotal">KSh 0</b><small>TOTAL</small></div>
+</div>
+
+<input id="search" class="input" placeholder="🔍 Search Code / Amount..." oninput="render()">
+
+<div id="list"></div>
+<button onclick="clearAll()" style="background:#222;color:#888;border:1px solid #333;padding:10px;width:100%;border-radius:10px;margin-top:20px">Clear All History</button>
+</div>
+
+<script>
+const ADMIN_PIN = "3624"; // badilisha ukitaka
+function login(){
+ if(document.getElementById('pin').value == ADMIN_PIN){
+  document.getElementById('loginPage').style.display='none';
+  document.getElementById('main').style.display='block';
+  render();
+ } else alert('PIN Sio Sahihi! Jaribu 3624');
+}
+setInterval(()=>{ document.getElementById('time').innerText = new Date().toLocaleString(); },1000);
+
+function getReqs(){ return JSON.parse(localStorage.getItem('fund_requests')||'[]'); }
+
+function render(){
+ let reqs = getReqs();
+ let q = document.getElementById('search').value.toLowerCase();
+ if(q) reqs = reqs.filter(r=> r.code.toLowerCase().includes(q) || r.amount.toString().includes(q) );
+
+ document.getElementById('sPending').innerText = getReqs().filter(r=>r.status=='PENDING').length;
+ document.getElementById('sApproved').innerText = getReqs().filter(r=>r.status=='APPROVED').length;
+ document.getElementById('sTotal').innerText = 'KSh ' + getReqs().filter(r=>r.status=='APPROVED').reduce((a,b)=>a+parseInt(b.amount),0);
+
+ reqs = reqs.reverse();
+ let html = '';
+ reqs.forEach(r=>{
+  let cls = r.status=='PENDING'?'pending':r.status=='APPROVED'?'approved':'rejected';
+  html+=`<div class="card ${cls}">
+  <div style="display:flex;justify-content:space-between">
+  <b>KSh ${r.amount}</b><small style="color:#888">${r.time}</small>
+  </div>
+  <div style="margin:8px 0;background:#0a0a0a;padding:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center">
+  <b style="letter-spacing:1px">${r.code}</b><button class="btn btn-copy" onclick="navigator.clipboard.writeText('${r.code}');alert('Code copied!')">Copy</button>
+  </div>
+  <small>Status: <b style="color:${r.status=='PENDING'?'orange':r.status=='APPROVED'?'#22c55e':'red'}">${r.status}</b></small>
+  <div style="margin-top:10px">
+  ${r.status=='PENDING'?`<button class="btn btn-approve" onclick="approve(${r.id})">✅ APPROVE & ADD BALANCE</button><button class="btn btn-reject" onclick="reject(${r.id})">❌ REJECT</button>`:''}
+  ${r.status!='PENDING'?`<small style="color:#666">Checked - Till 3624692</small>`:''}
+  </div>
+  </div>`;
+ });
+ document.getElementById('list').innerHTML = html || '<p style="text-align:center;color:#555;margin-top:30px">Hakuna requests</p>';
+}
+
+function approve(id){
+ if(!confirm('CONFIRM: Umeangalia M-Pesa yako? Pesa ya TILL 3624692 imeingia kweli?\n\nUkiclick OK balance ya mteja itaongezeka!')) return;
+ let reqs = getReqs();
+ let r = reqs.find(x=>x.id==id);
+ if(!r) return;
+ r.status='APPROVED';
+ localStorage.setItem('fund_requests', JSON.stringify(reqs));
+ // ongeza balance global - kwa demo tunatumia key moja, kwa prod utatumia Firebase
+ let bal = parseInt(localStorage.getItem('mtaani_balance')||'0');
+ localStorage.setItem('mtaani_balance', bal + parseInt(r.amount));
+ alert('✅ APPROVED! KSh '+r.amount+' imeongezwa kwa mteja.');
+ render();
+}
+
+function reject(id){
+ if(!confirm('Reject hii code?')) return;
+ let reqs = getReqs();
+ let r = reqs.find(x=>x.id==id);
+ if(r) r.status='REJECTED';
+ localStorage.setItem('fund_requests', JSON.stringify(reqs));
+ render();
+}
+
+function clearAll(){ if(confirm('Futa history yote?')){ localStorage.removeItem('fund_requests'); render(); } }
+</script>
+</body>
+</html>
