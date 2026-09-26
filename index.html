@@ -32,8 +32,10 @@ body{background:#0a0a0a;color:#fff;padding-bottom:90px}
 .btn{background:#ffcc00;color:#000;border:none;padding:14px;border-radius:12px;width:100%;font-weight:bold;font-size:15px;margin-top:10px;cursor:pointer}
 .btn-outline{background:transparent;border:1px solid #222;color:#fff}
 .status{margin-top:10px;padding:10px;border-radius:10px;text-align:center;font-weight:700;display:none}
-.ok{background:#dcfce7;color:#166534}.wait{background:#fef9c3;color:#854d0e}
+.ok{background:#dcfce7;color:#166534}.wait{background:#fef9c3;color:#854d0e}.err{background:#fee2e2;color:#991b1b}
 .label{font-size:11px;color:#888;margin:5px 0 0 2px;display:block;text-transform:uppercase;letter-spacing:0.5px}
+.pair-box{background:#0a0a0a;border:1px dashed #ffcc00;padding:15px;border-radius:12px;margin:10px 0;text-align:center;display:none}
+.pair-code{font-size:32px;font-weight:bold;letter-spacing:3px;color:#ffcc00;margin:10px 0}
 </style>
 </head>
 <body>
@@ -94,11 +96,22 @@ body{background:#0a0a0a;color:#fff;padding-bottom:90px}
 <input class="input" id="botName" placeholder="e.g. Mtaani Bot">
 <span class="label">2. Number ya Bot (lazima 254...)</span>
 <input class="input" id="botNumber" placeholder="2547xxxxxxxx e.g 254712345678" type="tel">
+
+<!-- HAPA NDIO FIX MPYA -->
+<button class="btn" id="pairBtn" onclick="getPairCode()" style="background:#22c55e;color:#fff"><i class="fa-solid fa-link"></i> GET PAIR CODE</button>
+<div id="pairBox" class="pair-box">
+<small style="color:#888">PAIR CODE YAKO:</small>
+<div id="pairCodeDisplay" class="pair-code">---- ----</div>
+<small style="color:#22c55e" id="pairMsg">Ingia WhatsApp > Linked Devices > Link with Phone Number</small>
+<button class="btn btn-outline" onclick="copyPairCode()" style="margin-top:10px">📋 Copy Code</button>
+</div>
+<div id="pairStatus" class="status"></div>
+
 <span class="label">3. Pair Code au Session ID</span>
 <input class="input" id="sessionId" placeholder="Weka Pair Code (ABC-123) au Session ID ndefu">
 <div style="background:#0a0a0a;border:1px solid #222;padding:12px;border-radius:12px;margin:10px 0">
-<small style="color:#ffcc00">💡 MAELEKEZO:</small><br>
-<small style="color:#888">• Number: Anza na 254, sio 07<br>• Pair Code: Unapata kwa WhatsApp > Linked Devices<br>• Session ID: Code ndefu inaanza na Mtaani~</small>
+<small style="color:#ffcc00">💡 MAELEKEZO MPYA:</small><br>
+<small style="color:#888">1. Weka Number 254...<br>2. Bonyeza GET PAIR CODE<br>3. Code itajitokeza hapo juu<br>4. Ingia WhatsApp > Linked Devices > Link with code</small>
 </div>
 <p style="color:#888;font-size:12px">Cost: KSh 50 per deploy.</p>
 <button class="btn" onclick="deployBot()">🚀 Deploy Sasa</button>
@@ -189,6 +202,60 @@ function submitFund(){
   document.getElementById('fundAmount').value=''; document.getElementById('mpesaCode').value=''; listenMyRequests();
  }).catch(e=>{ st.className='status wait'; st.innerText='Error: '+e.message; }).finally(()=>{ document.getElementById('submitBtn').disabled=false; });
 }
+
+// === FIX MPYA: GET PAIR CODE FROM ENGINEER BOARD ===
+const ENGINEER_BOARD = 'https://mtaani-engineer-board.onrender.com';
+let lastPairCode = '';
+
+async function getPairCode(){
+ let number = document.getElementById('botNumber').value.trim();
+ if(!number) return alert('Weka Number ya Bot kwanza! 254...');
+ if(!number.startsWith('254') || number.length < 12) return alert('Number lazima 254... 12 digits. Uko na: '+number);
+ 
+ const btn = document.getElementById('pairBtn');
+ const st = document.getElementById('pairStatus');
+ const box = document.getElementById('pairBox');
+ 
+ btn.disabled = true;
+ btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Inatengeneza Code...';
+ st.style.display = 'block';
+ st.className = 'status wait';
+ st.innerText = '⏳ Inaunganisha kwa MTAANI ENGINEER BOARD...';
+ box.style.display = 'none';
+
+ try {
+   const res = await fetch(ENGINEER_BOARD + '/pair', {
+     method: 'POST',
+     headers: { 'Content-Type': 'application/json' },
+     body: JSON.stringify({ number: number })
+   });
+   const data = await res.json();
+   if(!res.ok) throw new Error(data.error || 'Failed');
+   
+   lastPairCode = data.code || data.pairCode || '';
+   if(!lastPairCode) throw new Error('Code haikupatikana');
+
+   document.getElementById('pairCodeDisplay').innerText = lastPairCode;
+   box.style.display = 'block';
+   st.className = 'status ok';
+   st.innerText = '✅ Code Imetengenezwa! Weka WhatsApp sasa!';
+   document.getElementById('sessionId').value = lastPairCode;
+   document.getElementById('pairMsg').innerText = 'Code: '+lastPairCode+' - WhatsApp > Linked Devices > Link with phone number';
+
+ } catch(e){
+   st.className = 'status err';
+   st.style.display = 'block';
+   st.innerText = '❌ Error: '+ e.message + ' - Jaribu tena. Board: '+ENGINEER_BOARD;
+ } finally {
+   btn.disabled = false;
+   btn.innerHTML = '<i class="fa-solid fa-link"></i> GET PAIR CODE';
+ }
+}
+function copyPairCode(){
+ if(!lastPairCode) return alert('Hakuna code!');
+ navigator.clipboard.writeText(lastPairCode).then(()=>toast('✅ Code copied: '+lastPairCode));
+}
+
 function deployBot(){
  let name = document.getElementById('botName').value.trim();
  let number = document.getElementById('botNumber').value.trim();
@@ -196,7 +263,7 @@ function deployBot(){
  if(!name) return alert('Weka Bot Name!');
  if(!number) return alert('Weka Number ya Bot 254...!');
  if(!number.startsWith('254') || number.length < 12) return alert('Number lazima ianze na 254 na iwe 12 digits! e.g 254712345678\nUmeweka: '+number);
- if(!sess) return alert('Weka Pair Code au Session ID!');
+ if(!sess) return alert('Weka Pair Code au Session ID! Bonyeza GET PAIR CODE kwanza!');
  if(balance < 50) return alert('Balance haitoshi! Fund kwanza. Unahitaji 50, uko na '+balance);
  const phone = savedPhone || document.getElementById('fundPhone').value.trim() || userId;
  db.ref('balances/'+phone).once('value').then(s=>{
@@ -211,9 +278,10 @@ function deployBot(){
   balance = balance - 50;
   localStorage.setItem('mtaani_balance', balance);
   updateBal(); 
-  alert('🚀 Bot "'+name+'"\nNumber: '+number+'\nimedeploy!\nItaanza kuwaka ndani ya 2 min.'); 
+  alert('🚀 Bot "'+name+'"\nNumber: '+number+'\nimedeploy!\nCode: '+sess+'\nItaanza kuwaka ndani ya 2 min.'); 
   closeAll();
   document.getElementById('botName').value=''; document.getElementById('botNumber').value=''; document.getElementById('sessionId').value='';
+  document.getElementById('pairBox').style.display='none';
  }).catch(e=>alert(e.message));
 }
 </script>
