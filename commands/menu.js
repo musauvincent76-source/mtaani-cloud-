@@ -2,45 +2,45 @@
 // Powered by Till 3624692
 
 const menu = async (m, { sock, prefix }) => {
-  const menuText = `
-╔═══ *MTAANI CLOUD ☁️* ═══
-║ Welcome Boss! 👋
-║ Bot is LIVE & Running
-║ Prefix: [ ${prefix} ]
-╠═══ *CLOUD MENU* ═══
-║ ${prefix}cloud - Cloud info
-║ ${prefix}deploy - How to deploy
-║ ${prefix}balance - Check wallet
-║ ${prefix}fund - Fund wallet
-║ ${prefix}ping - Bot speed
-║ ${prefix}alive - Is Cloud ON?
-║ ${prefix}owner - Contact Admin
-╠═══ *GROUP MANAGER* ═══
-║ ${prefix}mtag - Tag everyone
-║ ${prefix}hidetag text - Hide tag
-║ ${prefix}mkick @user - Remove user
-║ ${prefix}madd 254... - Add user
-║ ${prefix}mpromote @ - Make admin
-║ ${prefix}mdemote @ - Remove admin
-║ ${prefix}mlink - Get group link
-║ ${prefix}mclose - Close group
-║ ${prefix}mopen - Open group
-╠═══ *DOWNLOADER ☁️* ═══
-║ ${prefix}mplay song - Download audio
-║ ${prefix}msong song - Download audio
-║ ${prefix}mvideo song - Download video
-║ ${prefix}mtiktok link - TikTok DL
-║ ${prefix}mfb link - Facebook DL
-║ ${prefix}mig link - Instagram DL
-╠═══ *STICKER CLOUD* ═══
-║ ${prefix}msticker - Photo to sticker
-║ ${prefix}mtoimg - Sticker to photo
-╠═══ *AI CLOUD* ═══
-║ ${prefix}mai question - Ask AI
-║ ${prefix}mimagine prompt - AI image
-╚═══ *POWERED BY MTAANI CLOUD* ═══
-   TILL: 3624692 LIVE
-`;
+  const p = prefix || ".";
+  const menuText = 
+"╔═══ *MTAANI CLOUD ☁️* ═══\n" +
+"║ Welcome Boss! 👋\n" +
+"║ Bot is LIVE & Running\n" +
+"║ Prefix: [ " + p + " ]\n" +
+"╠═══ *CLOUD MENU* ═══\n" +
+"║ " + p + "cloud - Cloud info\n" +
+"║ " + p + "deploy - How to deploy\n" +
+"║ " + p + "balance - Check wallet\n" +
+"║ " + p + "fund - Fund wallet\n" +
+"║ " + p + "ping - Bot speed\n" +
+"║ " + p + "alive - Is Cloud ON?\n" +
+"║ " + p + "owner - Contact Admin\n" +
+"╠═══ *GROUP MANAGER* ═══\n" +
+"║ " + p + "mtag - Tag everyone\n" +
+"║ " + p + "hidetag text - Hide tag\n" +
+"║ " + p + "mkick @user - Remove user\n" +
+"║ " + p + "madd 254... - Add user\n" +
+"║ " + p + "mpromote @ - Make admin\n" +
+"║ " + p + "mdemote @ - Remove admin\n" +
+"║ " + p + "mlink - Get group link\n" +
+"║ " + p + "mclose - Close group\n" +
+"║ " + p + "mopen - Open group\n" +
+"╠═══ *DOWNLOADER ☁️* ═══\n" +
+"║ " + p + "mplay song - Download audio\n" +
+"║ " + p + "msong song - Download audio\n" +
+"║ " + p + "mvideo song - Download video\n" +
+"║ " + p + "mtiktok link - TikTok DL\n" +
+"║ " + p + "mfb link - Facebook DL\n" +
+"║ " + p + "mig link - Instagram DL\n" +
+"╠═══ *STICKER CLOUD* ═══\n" +
+"║ " + p + "msticker - Photo to sticker\n" +
+"║ " + p + "mtoimg - Sticker to photo\n" +
+"╠═══ *AI CLOUD* ═══\n" +
+"║ " + p + "mai question - Ask AI\n" +
+"║ " + p + "mimagine prompt - AI image\n" +
+"╚═══ *POWERED BY MTAANI CLOUD* ═══\n" +
+"   TILL: 3624692 LIVE";
 
   await sock.sendMessage(m.key.remoteJid, { text: menuText }, { quoted: m });
 };
