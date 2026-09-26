@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mtaani Cloud md- Deploy Anything</title>
+<title>Mtaani Cloud - Deploy Anything</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -40,7 +40,7 @@ body{background:#0a0a0a;color:#fff;padding-bottom:90px}
 </head>
 <body>
 <div class="header">
-<div><h3>Mtaani Cloud</h3><small style="color:#666">Karibu, Boss</small></div>
+<div><h3>Mtaani Cloud</h3><small style="color:#666">Welcome, Boss</small></div>
 <div class="badge"><i class="fa-solid fa-fire" style="color:#ff6a00"></i> LIVE</div>
 </div>
 <div class="wallet" onclick="openFund()">
@@ -71,18 +71,18 @@ body{background:#0a0a0a;color:#fff;padding-bottom:90px}
 </div>
 <div class="modal" id="fundModal" onclick="if(event.target==this)closeAll()">
 <div class="modal-box">
-<h3>Fund Wallet - TILL 3624692 LIVE</h3>
-<p style="color:#888;font-size:13px;margin:10px 0">Firebase LIVE - Admin ataona instantly</p>
-<input id="fundPhone" class="input" placeholder="Namba yako 07... (kwa balance)">
-<input id="fundAmount" class="input" type="number" placeholder="Weka Amount (min 100)">
+<h3>Fund Wallet - TILL 3624692</h3>
+<p style="color:#888;font-size:13px;margin:10px 0">Firebase LIVE - Admin sees instantly</p>
+<input id="fundPhone" class="input" placeholder="Your Phone 07...">
+<input id="fundAmount" class="input" type="number" placeholder="Enter Amount (min 100)">
 <div style="background:#0a0a0a;border:1px dashed #ffcc00;padding:15px;border-radius:12px;margin:10px 0">
-<small style="color:#ffcc00">LIPA HIVI:</small><br>
-<b>1. Lipa Na M-Pesa -> Buy Goods Till: 3624692</b><br>
+<small style="color:#ffcc00">PAY VIA:</small><br>
+<b>1. M-Pesa -> Buy Goods Till: 3624692</b><br>
 <b>2. Amount: <span id="showAmt">0</span></b><br>
-<small style="color:#888">Baada ya kulipa Weka CODE hapa</small>
+<small style="color:#888">After payment enter CODE below</small>
 </div>
-<input id="mpesaCode" class="input" placeholder="Weka M-Pesa Code (e.g. QGH7XY...)">
-<button class="btn" id="submitBtn" onclick="submitFund()">✅ Nimeshatuma - Confirm LIVE</button>
+<input id="mpesaCode" class="input" placeholder="Enter M-Pesa Code (e.g. QGH7XY...)">
+<button class="btn" id="submitBtn" onclick="submitFund()">✅ I Have Paid - Confirm LIVE</button>
 <div id="fundStatus" class="status"></div>
 <button class="btn btn-outline" onclick="closeAll()">Cancel</button>
 <div style="margin-top:15px" id="myRequests"></div>
@@ -91,30 +91,29 @@ body{background:#0a0a0a;color:#fff;padding-bottom:90px}
 <div class="modal" id="deployModal" onclick="if(event.target==this)closeAll()">
 <div class="modal-box">
 <h3>🚀 Deploy WhatsApp Bot</h3>
-<p style="color:#666;font-size:12px;margin:8px 0 15px">Jaza kila field kivyake</p>
+<p style="color:#666;font-size:12px;margin:8px 0 15px">Fill all fields correctly</p>
 <span class="label">1. Bot Name</span>
 <input class="input" id="botName" placeholder="e.g. Mtaani Bot">
-<span class="label">2. Number ya Bot (lazima 254...)</span>
+<span class="label">2. Bot Number (Must be 254...)</span>
 <input class="input" id="botNumber" placeholder="2547xxxxxxxx e.g 254712345678" type="tel">
 
-<!-- HAPA NDIO FIX MPYA -->
 <button class="btn" id="pairBtn" onclick="getPairCode()" style="background:#22c55e;color:#fff"><i class="fa-solid fa-link"></i> GET PAIR CODE</button>
 <div id="pairBox" class="pair-box">
-<small style="color:#888">PAIR CODE YAKO:</small>
+<small style="color:#888">YOUR PAIR CODE:</small>
 <div id="pairCodeDisplay" class="pair-code">---- ----</div>
-<small style="color:#22c55e" id="pairMsg">Ingia WhatsApp > Linked Devices > Link with Phone Number</small>
+<small style="color:#22c55e" id="pairMsg">Go to WhatsApp > Linked Devices > Link with Phone Number</small>
 <button class="btn btn-outline" onclick="copyPairCode()" style="margin-top:10px">📋 Copy Code</button>
 </div>
 <div id="pairStatus" class="status"></div>
 
-<span class="label">3. Pair Code au Session ID</span>
-<input class="input" id="sessionId" placeholder="Weka Pair Code (ABC-123) au Session ID ndefu">
+<span class="label">3. Pair Code or Session ID</span>
+<input class="input" id="sessionId" placeholder="Enter Pair Code (ABCD-1234)">
 <div style="background:#0a0a0a;border:1px solid #222;padding:12px;border-radius:12px;margin:10px 0">
-<small style="color:#ffcc00">💡 MAELEKEZO MPYA:</small><br>
-<small style="color:#888">1. Weka Number 254...<br>2. Bonyeza GET PAIR CODE<br>3. Code itajitokeza hapo juu<br>4. Ingia WhatsApp > Linked Devices > Link with code</small>
+<small style="color:#ffcc00">💡 HOW IT WORKS:</small><br>
+<small style="color:#888">1. Enter Number 254...<br>2. Click GET PAIR CODE<br>3. Code appears above<br>4. WhatsApp > Linked Devices > Link with phone number > Enter code</small>
 </div>
 <p style="color:#888;font-size:12px">Cost: KSh 50 per deploy.</p>
-<button class="btn" onclick="deployBot()">🚀 Deploy Sasa</button>
+<button class="btn" onclick="deployBot()">🚀 Deploy Now</button>
 <button class="btn btn-outline" onclick="closeAll()">Cancel</button>
 </div>
 </div>
@@ -162,7 +161,7 @@ function openFund(){ document.getElementById('fundModal').classList.add('active'
 function openDeploy(){ document.getElementById('deployModal').classList.add('active'); }
 function openMyBots(){ 
   let bots = JSON.parse(localStorage.getItem('my_bots')||'[]'); 
-  if(!bots.length) return toast('Huna bot bado. Deploy kwanza!'); 
+  if(!bots.length) return toast('No bots yet. Deploy first!'); 
   let txt = bots.map(b=>`🤖 ${b.name}\n📱 ${b.number||'No number'}\n🔑 ${ (b.session||'').substring(0,20)}...\n✅ ${b.status}`).join('\n\n');
   alert('MY BOTS:\n\n'+txt); 
 }
@@ -183,46 +182,40 @@ function listenMyRequests(){
  db.ref('requests').orderByChild('phone').equalTo(phone).on('value', snap=>{
   const data = snap.val()||{}; 
   const arr = Object.values(data).slice(-3).reverse();
-  document.getElementById('myRequests').innerHTML = arr.length?'<b>Requests Zako (LIVE):</b><br>'+arr.map(r=>`KSh ${r.amount} - ${r.code} - <b style="color:${(r.status||'').toLowerCase().includes('pend')?'orange':(r.status||'').toLowerCase().includes('approv')?'#22c55e':'red'}">${r.status}</b>`).join('<br>'):'<small style="color:#666">Hakuna requests bado</small>';
+  document.getElementById('myRequests').innerHTML = arr.length?'<b>Your Requests (LIVE):</b><br>'+arr.map(r=>`KSh ${r.amount} - ${r.code} - <b style="color:${(r.status||'').toLowerCase().includes('pend')?'orange':(r.status||'').toLowerCase().includes('approv')?'#22c55e':'red'}">${r.status}</b>`).join('<br>'):'<small style="color:#666">No requests yet</small>';
  });
 }
 function submitFund(){
  let amt = document.getElementById('fundAmount').value;
  let code = document.getElementById('mpesaCode').value.toUpperCase().trim();
  let phone = document.getElementById('fundPhone').value.trim();
- if(!phone || phone.length<9) return alert('Weka namba yako ya simu!');
+ if(!phone || phone.length<9) return alert('Enter your phone number!');
  if(!amt || amt<100) return alert('Amount min 100');
- if(!code || code.length<8) return alert('Weka Code valid!');
+ if(!code || code.length<8) return alert('Enter valid Code!');
  localStorage.setItem('mtaani_phone', phone);
  savedPhone = phone;
  document.getElementById('submitBtn').disabled=true;
- const st = document.getElementById('fundStatus'); st.style.display='block'; st.className='status wait'; st.innerText='Inatuma LIVE kwa admin...';
+ const st = document.getElementById('fundStatus'); st.style.display='block'; st.className='status wait'; st.innerText='Sending LIVE to admin...';
  db.ref('requests').push({ amount: Number(amt), code: code, phone: phone, userId: userId, status: 'PENDING', createdAt: Date.now(), time: new Date().toLocaleString() }).then(()=>{
-  st.className='status ok'; st.innerText='✅ Imetumwa LIVE! Admin ataona sai hii.';
+  st.className='status ok'; st.innerText='✅ Sent LIVE! Admin will see it now.';
   document.getElementById('fundAmount').value=''; document.getElementById('mpesaCode').value=''; listenMyRequests();
  }).catch(e=>{ st.className='status wait'; st.innerText='Error: '+e.message; }).finally(()=>{ document.getElementById('submitBtn').disabled=false; });
 }
-
-// === FIX MPYA: GET PAIR CODE FROM ENGINEER BOARD ===
 const ENGINEER_BOARD = 'https://mtaani-engineer-board.onrender.com';
 let lastPairCode = '';
-
 async function getPairCode(){
  let number = document.getElementById('botNumber').value.trim();
- if(!number) return alert('Weka Number ya Bot kwanza! 254...');
- if(!number.startsWith('254') || number.length < 12) return alert('Number lazima 254... 12 digits. Uko na: '+number);
- 
+ if(!number) return alert('Enter Bot Number first! 254...');
+ if(!number.startsWith('254') || number.length < 12) return alert('Number must be 254... 12 digits. You entered: '+number);
  const btn = document.getElementById('pairBtn');
  const st = document.getElementById('pairStatus');
  const box = document.getElementById('pairBox');
- 
  btn.disabled = true;
- btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Inatengeneza Code...';
+ btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating Code...';
  st.style.display = 'block';
  st.className = 'status wait';
- st.innerText = '⏳ Inaunganisha kwa MTAANI ENGINEER BOARD...';
+ st.innerText = '⏳ Connecting to MTAANI ENGINEER BOARD...';
  box.style.display = 'none';
-
  try {
    const res = await fetch(ENGINEER_BOARD + '/pair', {
      method: 'POST',
@@ -231,44 +224,39 @@ async function getPairCode(){
    });
    const data = await res.json();
    if(!res.ok) throw new Error(data.error || 'Failed');
-   
    lastPairCode = data.code || data.pairCode || '';
-   if(!lastPairCode) throw new Error('Code haikupatikana');
-
+   if(!lastPairCode) throw new Error('Code not found');
    document.getElementById('pairCodeDisplay').innerText = lastPairCode;
    box.style.display = 'block';
    st.className = 'status ok';
-   st.innerText = '✅ Code Imetengenezwa! Weka WhatsApp sasa!';
+   st.innerText = '✅ Code Generated! Enter in WhatsApp now!';
    document.getElementById('sessionId').value = lastPairCode;
-   document.getElementById('pairMsg').innerText = 'Code: '+lastPairCode+' - WhatsApp > Linked Devices > Link with phone number';
-
  } catch(e){
    st.className = 'status err';
    st.style.display = 'block';
-   st.innerText = '❌ Error: '+ e.message + ' - Jaribu tena. Board: '+ENGINEER_BOARD;
+   st.innerText = '❌ Error: '+ e.message + ' - Try again.';
  } finally {
    btn.disabled = false;
    btn.innerHTML = '<i class="fa-solid fa-link"></i> GET PAIR CODE';
  }
 }
 function copyPairCode(){
- if(!lastPairCode) return alert('Hakuna code!');
- navigator.clipboard.writeText(lastPairCode).then(()=>toast('✅ Code copied: '+lastPairCode));
+ if(!lastPairCode) return alert('No code!');
+ navigator.clipboard.writeText(lastPairCode).then(()=>toast('✅ Copied: '+lastPairCode));
 }
-
 function deployBot(){
  let name = document.getElementById('botName').value.trim();
  let number = document.getElementById('botNumber').value.trim();
  let sess = document.getElementById('sessionId').value.trim();
- if(!name) return alert('Weka Bot Name!');
- if(!number) return alert('Weka Number ya Bot 254...!');
- if(!number.startsWith('254') || number.length < 12) return alert('Number lazima ianze na 254 na iwe 12 digits! e.g 254712345678\nUmeweka: '+number);
- if(!sess) return alert('Weka Pair Code au Session ID! Bonyeza GET PAIR CODE kwanza!');
- if(balance < 50) return alert('Balance haitoshi! Fund kwanza. Unahitaji 50, uko na '+balance);
+ if(!name) return alert('Enter Bot Name!');
+ if(!number) return alert('Enter Bot Number 254...!');
+ if(!number.startsWith('254') || number.length < 12) return alert('Number must start with 254 and be 12 digits! e.g 254712345678\nYou entered: '+number);
+ if(!sess) return alert('Enter Pair Code! Click GET PAIR CODE first!');
+ if(balance < 50) return alert('Insufficient balance! Fund first. Need 50, you have '+balance);
  const phone = savedPhone || document.getElementById('fundPhone').value.trim() || userId;
  db.ref('balances/'+phone).once('value').then(s=>{
   const cur = s.val()?.balance||0; 
-  if(cur < 50 && balance < 50) throw new Error('Balance haitoshi: '+cur);
+  if(cur < 50 && balance < 50) throw new Error('Insufficient balance: '+cur);
   return db.ref('balances/'+phone).set({balance: cur>=50 ? cur-50 : balance-50, updatedAt: Date.now(), phone: phone});
  }).then(()=>{
   let bots = JSON.parse(localStorage.getItem('my_bots')||'[]'); 
@@ -278,7 +266,7 @@ function deployBot(){
   balance = balance - 50;
   localStorage.setItem('mtaani_balance', balance);
   updateBal(); 
-  alert('🚀 Bot "'+name+'"\nNumber: '+number+'\nimedeploy!\nCode: '+sess+'\nItaanza kuwaka ndani ya 2 min.'); 
+  alert('🚀 Bot "'+name+'"\nNumber: '+number+'\nDeployed!\nCode: '+sess+'\nWill start in 2 min.'); 
   closeAll();
   document.getElementById('botName').value=''; document.getElementById('botNumber').value=''; document.getElementById('sessionId').value='';
   document.getElementById('pairBox').style.display='none';
