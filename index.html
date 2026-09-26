@@ -9,59 +9,146 @@
 body{background:#0a0a0a;color:#fff;padding-bottom:90px}
 .header{padding:20px;display:flex;justify-content:space-between;align-items:center}
 .badge{background:#1a1a1a;border:1px solid #222;padding:8px 12px;border-radius:20px;font-size:12px}
-.wallet{background:linear-gradient(135deg,#ffcc00,#ff9500);color:#000;margin:15px;padding:20px;border-radius:20px;display:flex;justify-content:space-between;align-items:center}
+.wallet{background:linear-gradient(135deg,#ffcc00,#ff9500);color:#000;margin:15px;padding:20px;border-radius:20px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
 .wallet h2{font-size:28px}
 .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:15px}
-.card{background:#151515;border:1px solid #222;border-radius:18px;padding:18px 10px;text-align:center;transition:0.2s}
+.card{background:#151515;border:1px solid #222;border-radius:18px;padding:18px 10px;text-align:center;transition:0.2s;cursor:pointer}
 .card:active{transform:scale(0.95);background:#1f1f1f}
 .card i{font-size:22px;margin-bottom:8px;display:block}
 .card span{font-size:11px;color:#aaa;display:block;margin-top:4px}
 .card b{font-size:12px}
 .blue{color:#3b82f6}.green{color:#22c55e}.gold{color:#ffcc00}.purple{color:#a855f7}.red{color:#ef4444}.cyan{color:#06b6d4}
 .section{padding:0 15px;margin-top:10px}
-.row{background:#151515;border:1px solid #222;border-radius:14px;padding:15px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.nav{position:fixed;bottom:15px;left:15px;right:15px;background:#151515;border:1px solid #222;border-radius:25px;display:flex;justify-content:space-around;padding:12px;backdrop-filter:blur(10px)}
-.nav i{font-size:18px;color:#666}
+.row{background:#151515;border:1px solid #222;border-radius:14px;padding:15px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;cursor:pointer}
+.nav{position:fixed;bottom:15px;left:15px;right:15px;background:#151515ee;border:1px solid #222;border-radius:25px;display:flex;justify-content:space-around;padding:12px;backdrop-filter:blur(10px);z-index:100}
+.nav i{font-size:18px;color:#666;cursor:pointer;padding:10px}
 .nav .active{color:#ffcc00}
-.fab{background:#ffcc00;color:#000;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-top:-35px;border:4px solid #0a0a0a}
+.fab{background:#ffcc00;color:#000;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-top:-35px;border:4px solid #0a0a0a;cursor:pointer}
+/* MODALS */
+.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(5px);z-index:200;display:none;align-items:flex-end}
+.modal.active{display:flex}
+.modal-box{background:#151515;border:1px solid #222;border-radius:25px 25px 0 0;width:100%;padding:25px;max-height:85vh;overflow:auto}
+.input{background:#0a0a0a;border:1px solid #222;padding:14px;border-radius:12px;width:100%;color:#fff;margin:10px 0;font-size:16px}
+.btn{background:#ffcc00;color:#000;border:none;padding:14px;border-radius:12px;width:100%;font-weight:bold;font-size:15px;margin-top:10px;cursor:pointer}
+.btn-outline{background:transparent;border:1px solid #222;color:#fff}
 </style>
 </head>
 <body>
 
 <div class="header">
-<div><h3>Mtaani Cloud</h3><small style="color:#666">Karibu, Boss</small></div>
+<div><h3>Mtaani Cloud</h3><small style="color:#666" id="userLabel">Karibu, Boss</small></div>
 <div class="badge"><i class="fa-solid fa-fire" style="color:#ff6a00"></i> 7 Day Streak</div>
 </div>
 
-<div class="wallet">
-<div><small style="opacity:0.7">WALLET BALANCE</small><h2>KSh 0.00</h2><small>Level 1 • Explorer</small></div>
+<div class="wallet" onclick="openFund()">
+<div><small style="opacity:0.7">WALLET BALANCE</small><h2 id="bal">KSh 0.00</h2><small>Level 1 • Explorer</small></div>
 <div style="background:#000;color:#ffcc00;padding:10px 15px;border-radius:20px;font-weight:bold">+ Fund</div>
 </div>
 
 <div class="section"><b>QUICK LAUNCH</b></div>
 <div class="grid">
-<div class="card"><i class="fa-brands fa-whatsapp green"></i><b>Deploy Bot</b><span>WhatsApp</span></div>
-<div class="card"><i class="fa-solid fa-robot purple"></i><b>My Bots</b><span>3 Active</span></div>
-<div class="card"><i class="fa-solid fa-store blue"></i><b>Bot Market</b><span>Buy Bots</span></div>
-<div class="card"><i class="fa-solid fa-server gold"></i><b>VPS</b><span>From 299</span></div>
-<div class="card"><i class="fa-solid fa-globe cyan"></i><b>Websites</b><span>Hosting</span></div>
-<div class="card"><i class="fa-solid fa-sim-card red"></i><b>Numbers</b><span>USA/UK</span></div>
+<div class="card" onclick="openDeploy()"><i class="fa-brands fa-whatsapp green"></i><b>Deploy Bot</b><span>WhatsApp</span></div>
+<div class="card" onclick="openMyBots()"><i class="fa-solid fa-robot purple"></i><b>My Bots</b><span id="botCount">0 Active</span></div>
+<div class="card" onclick="toast('Bot Market coming soon - bots 500-2000')"><i class="fa-solid fa-store blue"></i><b>Bot Market</b><span>Buy Bots</span></div>
+<div class="card" onclick="toast('VPS from KSh 299/mo - DM admin')"><i class="fa-solid fa-server gold"></i><b>VPS</b><span>From 299</span></div>
+<div class="card" onclick="toast('Websites - Hosting KSh 999/year')"><i class="fa-solid fa-globe cyan"></i><b>Websites</b><span>Hosting</span></div>
+<div class="card" onclick="toast('Numbers USA/UK - KSh 1500')"><i class="fa-solid fa-sim-card red"></i><b>Numbers</b><span>USA/UK</span></div>
 </div>
 
 <div class="section"><b>EXPLORE</b></div>
 <div style="padding:15px">
-<div class="row"><span><i class="fa-solid fa-chart-line gold"></i> Live Activity</span><i class="fa-solid fa-chevron-right" style="color:#333"></i></div>
-<div class="row"><span><i class="fa-solid fa-gift blue"></i> Daily Offers • 3 New</span><span style="background:#ffcc00;color:#000;padding:2px 8px;border-radius:10px;font-size:10px">NEW</span></div>
-<div class="row"><span><i class="fa-solid fa-headset green"></i> Support 24/7</span><i class="fa-solid fa-chevron-right" style="color:#333"></i></div>
+<div class="row" onclick="openMyBots()"><span><i class="fa-solid fa-chart-line gold"></i> Live Activity</span><i class="fa-solid fa-chevron-right" style="color:#333"></i></div>
+<div class="row" onclick="toast('Check WhatsApp Status for offers!')"><span><i class="fa-solid fa-gift blue"></i> Daily Offers • 3 New</span><span style="background:#ffcc00;color:#000;padding:2px 8px;border-radius:10px;font-size:10px">NEW</span></div>
+<div class="row" onclick="window.open('https://wa.me/254700000000','_blank')"><span><i class="fa-solid fa-headset green"></i> Support 24/7</span><i class="fa-solid fa-chevron-right" style="color:#333"></i></div>
 </div>
 
 <div class="nav">
-<i class="fa-solid fa-house active"></i>
-<i class="fa-solid fa-compass"></i>
-<div class="fab"><i class="fa-solid fa-plus" style="color:#000"></i></div>
-<i class="fa-solid fa-trophy"></i>
-<i class="fa-solid fa-user"></i>
+<i class="fa-solid fa-house active" onclick="closeAll()"></i>
+<i class="fa-solid fa-compass" onclick="toast('Explore coming soon')"></i>
+<div class="fab" onclick="openDeploy()"><i class="fa-solid fa-plus" style="color:#000"></i></div>
+<i class="fa-solid fa-trophy" onclick="openMyBots()"></i>
+<i class="fa-solid fa-user" onclick="openFund()"></i>
 </div>
 
+<!-- FUND MODAL -->
+<div class="modal" id="fundModal" onclick="if(event.target==this)closeAll()">
+<div class="modal-box">
+<h3>Fund Wallet - TILL 3624692</h3>
+<p style="color:#888;font-size:13px;margin:10px 0">Manual verification - hatukosei mtu</p>
+<input id="fundAmount" class="input" type="number" placeholder="Weka Amount (min 100)">
+<div style="background:#0a0a0a;border:1px dashed #ffcc00;padding:15px;border-radius:12px;margin:10px 0">
+<small style="color:#ffcc00">LIPA HIVI:</small><br>
+<b>1. Lipa Na M-Pesa -> Buy Goods Till: 3624692</b><br>
+<b>2. Amount: <span id="showAmt">0</span></b><br>
+<small style="color:#888">Baada ya kulipa utapata SMS na CODE kama QGH... Weka hapa chini</small>
+</div>
+<input id="mpesaCode" class="input" placeholder="Weka M-Pesa Code (e.g. QGH7XY...)">
+<button class="btn" onclick="submitFund()">✅ Already paid- Confirm</button>
+<button class="btn btn-outline" onclick="closeAll()">Cancel</button>
+<div style="margin-top:15px" id="myRequests"></div>
+</div>
+</div>
+
+<!-- DEPLOY MODAL -->
+<div class="modal" id="deployModal" onclick="if(event.target==this)closeAll()">
+<div class="modal-box">
+<h3>Deploy WhatsApp Bot</h3>
+<input class="input" id="botName" placeholder="Bot Name (e.g. Mtaani Bot)">
+<input class="input" id="sessionId" placeholder="Session ID / Pair Code">
+<p style="color:#888;font-size:12px">Cost: KSh 50 per deploy. Balance itakatwa.</p>
+<button class="btn" onclick="deployBot()">🚀 Deploy Sasa</button>
+<button class="btn btn-outline" onclick="closeAll()">Cancel</button>
+</div>
+</div>
+
+<script>
+let balance = parseInt(localStorage.getItem('mtaani_balance')||'0');
+function updateBal(){ document.getElementById('bal').innerText='KSh '+balance+'.00'; document.getElementById('botCount').innerText= (JSON.parse(localStorage.getItem('my_bots')||'[]').length)+' Active'; }
+updateBal();
+
+function openFund(){
+ document.getElementById('fundModal').classList.add('active');
+ let reqs = JSON.parse(localStorage.getItem('fund_requests')||'[]');
+ document.getElementById('myRequests').innerHTML = reqs.length?'<b>Requests Zako:</b><br>'+reqs.slice(-3).reverse().map(r=>`KSh ${r.amount} - ${r.code} - <b style="color:${r.status=='PENDING'?'orange':r.status=='APPROVED'?'#22c55e':'red'}">${r.status}</b>`).join('<br>'):'';
+}
+function openDeploy(){ document.getElementById('deployModal').classList.add('active'); }
+function openMyBots(){
+ let bots = JSON.parse(localStorage.getItem('my_bots')||'[]');
+ if(!bots.length) return toast('Huna bot bado. Deploy kwanza!');
+ alert('MY BOTS:\n\n'+bots.map(b=>`🤖 ${b.name} - ${b.status}`).join('\n'));
+}
+function closeAll(){ document.querySelectorAll('.modal').forEach(m=>m.classList.remove('active')); }
+function toast(m){ alert(m); }
+
+document.getElementById('fundAmount')?.addEventListener('input', e=>{ document.getElementById('showAmt').innerText = e.target.value || '0'; });
+
+function submitFund(){
+ let amt = document.getElementById('fundAmount').value;
+ let code = document.getElementById('mpesaCode').value.toUpperCase().trim();
+ if(!amt || amt<100) return alert('Amount min 100');
+ if(!code || code.length<8) return alert('Weka M-Pesa Code valid (QGH...)');
+ let reqs = JSON.parse(localStorage.getItem('fund_requests')||'[]');
+ if(reqs.some(r=>r.code==code)) return alert('Hii code imeshatumika!');
+ reqs.push({id:Date.now(), amount:amt, code:code, time:new Date().toLocaleString(), status:'PENDING'});
+ localStorage.setItem('fund_requests', JSON.stringify(reqs));
+ alert('✅ Imetumwa! Tutacheck TILL 3624692 na ku-approve ndani ya 5 min. Usitume code fake utablockiwa.');
+ closeAll();
+}
+
+function deployBot(){
+ let name = document.getElementById('botName').value;
+ let sess = document.getElementById('sessionId').value;
+ if(!name || !sess) return alert('Jaza zote');
+ if(balance < 50) return alert('Balance haitoshi! Fund kwanza. Unahitaji 50, uko na '+balance);
+ balance -= 50;
+ localStorage.setItem('mtaani_balance', balance);
+ let bots = JSON.parse(localStorage.getItem('my_bots')||'[]');
+ bots.push({name:name, session:sess, status:'ACTIVE - Running', time:Date.now()});
+ localStorage.setItem('my_bots', JSON.stringify(bots));
+ updateBal();
+ alert('🚀 Bot "'+name+'" imedeploy! Itaanza kuwaka ndani ya 2 min.');
+ closeAll();
+}
+</script>
 </body>
 </html>
