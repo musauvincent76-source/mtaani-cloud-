@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mtaani Cloud - Deploy Anything</title>
+<title>Mtaani Cloud md- Deploy Anything</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -123,20 +123,29 @@ if(!userId){ userId = 'user_' + Math.random().toString(36).substring(2,9); local
 let savedPhone = localStorage.getItem('mtaani_phone')||'';
 document.getElementById('uidLabel').innerText = 'ID: '+userId + (savedPhone? ' • '+savedPhone : '');
 if(savedPhone) document.getElementById('fundPhone').value = savedPhone;
-let balance = 0;
+let balance = parseInt(localStorage.getItem('mtaani_balance')||'0');
+document.getElementById('bal').innerText='KSh '+balance+'.00';
 function listenBalance(){
- const phone = (document.getElementById('fundPhone').value.trim() || savedPhone || userId);
- db.ref('balances/'+phone).on('value', snap=>{
-  const v = snap.val(); if(v){ balance = v.balance; document.getElementById('bal').innerText='KSh '+balance+'.00'; localStorage.setItem('mtaani_balance', balance); }
- });
- db.ref('balances/'+userId).on('value', snap=>{
-  const v = snap.val(); if(v && !savedPhone){ balance = v.balance; document.getElementById('bal').innerText='KSh '+balance+'.00'; }
+ const phoneKey = (document.getElementById('fundPhone').value.trim() || savedPhone || userId);
+ if(!phoneKey) return;
+ db.ref('balances/'+phoneKey).on('value', snap=>{
+  const v = snap.val(); 
+  if(v && typeof v.balance !== 'undefined'){ 
+   balance = v.balance; 
+   document.getElementById('bal').innerText='KSh '+balance+'.00'; 
+   localStorage.setItem('mtaani_balance', balance); 
+   document.getElementById('uidLabel').innerText = 'ID: '+userId + ' • '+phoneKey;
+  }
  });
 }
 listenBalance();
-function updateBal(){ document.getElementById('bal').innerText='KSh '+balance+'.00'; document.getElementById('botCount').innerText= (JSON.parse(localStorage.getItem('my_bots')||'[]').length)+' Active'; }
+function updateBal(){ 
+ document.getElementById('bal').innerText='KSh '+balance+'.00'; 
+ let bots = JSON.parse(localStorage.getItem('my_bots')||'[]');
+ document.getElementById('botCount').innerText= bots.length+' Active'; 
+}
 updateBal();
-function openFund(){ document.getElementById('fundModal').classList.add('active'); listenMyRequests(); }
+function openFund(){ document.getElementById('fundModal').classList.add('active'); listenMyRequests(); listenBalance(); }
 function openDeploy(){ document.getElementById('deployModal').classList.add('active'); }
 function openMyBots(){ 
   let bots = JSON.parse(localStorage.getItem('my_bots')||'[]'); 
@@ -147,11 +156,20 @@ function openMyBots(){
 function closeAll(){ document.querySelectorAll('.modal').forEach(m=>m.classList.remove('active')); }
 function toast(m){ alert(m); }
 document.getElementById('fundAmount')?.addEventListener('input', e=>{ document.getElementById('showAmt').innerText = e.target.value || '0'; });
-document.getElementById('fundPhone')?.addEventListener('input', e=>{ if(e.target.value.length>=9){ savedPhone = e.target.value.trim(); localStorage.setItem('mtaani_phone', savedPhone); listenBalance(); listenMyRequests(); } });
+document.getElementById('fundPhone')?.addEventListener('input', e=>{ 
+ if(e.target.value.length>=9){ 
+  savedPhone = e.target.value.trim(); 
+  localStorage.setItem('mtaani_phone', savedPhone); 
+  listenBalance(); 
+  listenMyRequests(); 
+ } 
+});
 function listenMyRequests(){
  const phone = document.getElementById('fundPhone').value.trim() || savedPhone || userId;
+ if(!phone) return;
  db.ref('requests').orderByChild('phone').equalTo(phone).on('value', snap=>{
-  const data = snap.val()||{}; const arr = Object.values(data).slice(-3).reverse();
+  const data = snap.val()||{}; 
+  const arr = Object.values(data).slice(-3).reverse();
   document.getElementById('myRequests').innerHTML = arr.length?'<b>Requests Zako (LIVE):</b><br>'+arr.map(r=>`KSh ${r.amount} - ${r.code} - <b style="color:${(r.status||'').toLowerCase().includes('pend')?'orange':(r.status||'').toLowerCase().includes('approv')?'#22c55e':'red'}">${r.status}</b>`).join('<br>'):'<small style="color:#666">Hakuna requests bado</small>';
  });
 }
@@ -163,6 +181,7 @@ function submitFund(){
  if(!amt || amt<100) return alert('Amount min 100');
  if(!code || code.length<8) return alert('Weka Code valid!');
  localStorage.setItem('mtaani_phone', phone);
+ savedPhone = phone;
  document.getElementById('submitBtn').disabled=true;
  const st = document.getElementById('fundStatus'); st.style.display='block'; st.className='status wait'; st.innerText='Inatuma LIVE kwa admin...';
  db.ref('requests').push({ amount: Number(amt), code: code, phone: phone, userId: userId, status: 'PENDING', createdAt: Date.now(), time: new Date().toLocaleString() }).then(()=>{
@@ -179,15 +198,18 @@ function deployBot(){
  if(!number.startsWith('254') || number.length < 12) return alert('Number lazima ianze na 254 na iwe 12 digits! e.g 254712345678\nUmeweka: '+number);
  if(!sess) return alert('Weka Pair Code au Session ID!');
  if(balance < 50) return alert('Balance haitoshi! Fund kwanza. Unahitaji 50, uko na '+balance);
- const phone = savedPhone || userId;
+ const phone = savedPhone || document.getElementById('fundPhone').value.trim() || userId;
  db.ref('balances/'+phone).once('value').then(s=>{
-  const cur = s.val()?.balance||0; if(cur<50) throw new Error('Balance haitoshi: '+cur);
-  return db.ref('balances/'+phone).set({balance: cur-50, updatedAt: Date.now(), phone: phone});
+  const cur = s.val()?.balance||0; 
+  if(cur < 50 && balance < 50) throw new Error('Balance haitoshi: '+cur);
+  return db.ref('balances/'+phone).set({balance: cur>=50 ? cur-50 : balance-50, updatedAt: Date.now(), phone: phone});
  }).then(()=>{
   let bots = JSON.parse(localStorage.getItem('my_bots')||'[]'); 
   bots.push({name:name, number:number, session:sess, status:'ACTIVE - Running', time:Date.now()}); 
   localStorage.setItem('my_bots', JSON.stringify(bots)); 
   db.ref('deployed_bots').push({name, number, session: sess.substring(0,30)+'...', owner: phone, userId, createdAt: Date.now()});
+  balance = balance - 50;
+  localStorage.setItem('mtaani_balance', balance);
   updateBal(); 
   alert('🚀 Bot "'+name+'"\nNumber: '+number+'\nimedeploy!\nItaanza kuwaka ndani ya 2 min.'); 
   closeAll();
